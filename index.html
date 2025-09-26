@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Deformable Neural Radiance Fields creates free-viewpoint portraits (nerfies) from casually captured videos.">
+  <meta name="keywords" content="Nerfies, D-NeRF, NeRF">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WristWorld</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1">WristWorld: Generating Wrist-Views via<br/>4D World Models for Robotic Manipulation</h1>
+          <div class="content">
+            <video id="demo" controls playsinline muted width="75%">
+              <source src="./static/videos/demo.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 has-text-centered">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Wrist-view observations are crucial for VLA models as they capture fine-grained hand–object interactions that directly enhance manipulation performance.
+            Yet large-scale datasets rarely include such recordings, resulting in a substantial gap between abundant anchor views and scarce wrist views. Existing world models cannot bridge this gap, as they require a wrist-view first frame and thus fail to generate wrist-view videos from anchor views alone.
+            Amid this gap, recent visual geometry models such as VGGT emerge with precisely the geometric and cross-view priors that make it possible to address such extreme viewpoint shifts.
+            Inspired by these insights, we propose WristWorld, the first 4D world model that generates wrist-view videos solely from anchor views.
+            WristWorld operates in two stages: (i) Reconstruction, which extends VGGT and incorporates our proposed Spatial Projection Consistency (SPC) Loss to estimate geometrically consistent wrist-view poses and 4D point clouds; (ii) Generation, which employs our designed video generation model to synthesize temporally coherent wrist-view videos from the reconstructed perspective.
+            Experiments on Droid, Calvin, and Franka Panda demonstrate state-of-the-art video generation with superior spatial consistency, while also improving VLA performance, raising the average task completion length on Calvin by 3.81% and closing 42.4% of the anchor-wrist view gap.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">Model Architecture</h2>
+        <div class="content has-text-justified">
+          <p>
+            We introduce a two-stage 4D Generative World Model. In the reconstruction stage, VGGT is extended with a wrist head to regress wrist pose, guided by a Spatial Projection Consistency Loss that supervises directly from RGB without depth or extrinsics. The predicted pose projects point clouds into the wrist view. In the generation stage, these projections, combined with external-view CLIP embeddings, condition a video generator to synthesize wrist-view sequences. Without first-frame guidance, the model produces additional wrist views for VLA datasets, yielding substantial performance gains.
+          </p>
+        </div>
+        <div class="content has-text-centered">
+          <img src="./static/images/method.png" alt="Model Architecture" style="max-width: 100%; height: auto;"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">Experiment</h2>
+        <div class="content has-text-justified">
+          <p>
+            We evaluate WristWorld on Droid, Calvin, and a real Franka Panda setup. The system trains in two stages: Reconstruction extends VGGT with a wrist head and a Spatial Projection Consistency loss to recover wrist poses and 4D point clouds directly from RGB, while Generation conditions a video generator on wrist-view projections and external-view features to synthesize temporally coherent wrist-view videos without a wrist first frame. Pretraining on a large multi-view corpus followed by cross-view fine-tuning enables strong generalization. Quantitatively, WristWorld reduces FVD and improves LPIPS, SSIM, and PSNR; as a plug-and-play add-on to single-view world models it further cuts FVD substantially. For downstream policies, generated wrist views boost VLA, increasing average task completion length by 3.81 and closing 42.4% of the anchor–wrist gap. The figures below summarize video metrics, VLA gains, and ablations.
+          </p>
+        <div class="rows is-centered has-text-centered">
+          <h2 class="title is-3 has-text-centered" style="color:#6510ad;">Quantitative Results</h2>
+        </div>
+        <div class="content has-text-centered">
+          <img src="./static/images/fvd.png" alt="Video quantitative metrics (FVD table)" style="max-width: 100%; height: auto;"/>
+        </div>
+        <div class="rows is-centered has-text-centered">
+          <h2 class="title is-3 has-text-centered" style="color:#6510ad;">VLA & World Model Results</h2>
+        <div class="content has-text-centered">
+          <img src="./static/images/metrics.png" alt="Quantitative results and VLA improvements" style="max-width: 100%; height: auto;"/>
+        </div>
+        <div class="rows is-centered has-text-centered">
+          <h2 class="title is-3 has-text-centered" style="color:#6510ad;">Ablation Studies</h2>
+        <div class="content has-text-centered">
+          <img src="./static/images/ablation.png" alt="Ablation Result" style="max-width: 100%; height: auto;"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">Visualization</h2>
+        <div class="content has-text-justified">
+          <p>
+            We showcase qualitative results across simulated and real settings. Use the selector below to view side-by-side rollouts where the left panel is the ground-truth wrist view and the right panel is our generated wrist-view video conditioned only on anchor views.
+          </p>
+        </div>
+
+        <div class="content has-text-centered">
+          <div class="select is-medium">
+            <select id="grid-select">
+              <option value="droid">Droid</option>
+              <option value="calvin">Calvin</option>
+              <option value="real_world">Real-World (Franka)</option>
+            </select>
+          </div>
+        </div>
+        <div class="content has-text-centered">
+          <video id="grid-video" controls playsinline muted width="75%">
+            <source id="grid-video-source" src="./static/videos/droid_grid.mp4" type="video/mp4">
+          </video>
+          <p class="is-size-6">Left: ground truth wrist view. Right: WristWorld generation.</p>
+        </div>
+
+        <div class="rows is-centered has-text-centered">
+          <h2 class="title is-3 has-text-centered" style="color:#6510ad;">Droid Visualization</h2>
+        </div>
+        <div class="content has-text-centered">
+          <img src="./static/images/droid_vis.png" alt="Droid visualization" style="max-width: 100%; height: auto;"/>
+        </div>
+
+        <div class="rows is-centered has-text-centered">
+          <h2 class="title is-3 has-text-centered" style="color:#6510ad;">Calvin Visualization</h2>
+        </div>
+        <div class="content has-text-centered">
+          <img src="./static/images/calvin_vis.png" alt="Calvin visualization" style="max-width: 100%; height: auto;"/>
+        </div>
+
+        <div class="rows is-centered has-text-centered">
+          <h2 class="title is-3 has-text-centered" style="color:#6510ad;">Real-World Visualization</h2>
+        </div>
+        <div class="content has-text-centered">
+          <img src="./static/images/real_world_vis.png" alt="Real-world visualization" style="max-width: 100%; height: auto;"/>
+        </div>
+
+        <div class="rows is-centered has-text-centered">
+          <h2 class="title is-3 has-text-centered" style="color:#6510ad;">Real-World Baseline Comparisons</h2>
+        </div>
+        <div class="content has-text-centered">
+          <img src="./static/images/all_vis.png" alt="Real-world baseline comparisons" style="max-width: 100%; height: auto;"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

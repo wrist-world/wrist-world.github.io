@@ -1,2 +1,2 @@
-# wrist-world.github.io
-Demo page for WristWorld
+# Wrist World
+wrist world demo page
